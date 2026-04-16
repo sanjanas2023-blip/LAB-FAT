@@ -1,11 +1,9 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: university-dept-deployment
-  labels:
-    app: university-web
+  name: university-dept
 spec:
-  replicas: 2 # Runs 2 pods for high availability
+  replicas: 1
   selector:
     matchLabels:
       app: university-web
@@ -15,26 +13,19 @@ spec:
         app: university-web
     spec:
       containers:
-      - name: university-container
-    
-        image: university-dept-web:latest 
+      - name: web-container
+        image: university-web:latest
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 80
-
 ---
-
-
 apiVersion: v1
 kind: Service
 metadata:
-  name: university-dept-service
+  name: university-service
 spec:
+  type: LoadBalancer
+  ports:
+  - port: 80
   selector:
     app: university-web
-
-  type: LoadBalancer 
-  ports:
-    - protocol: TCP
-      port: 80
-      targetPort: 80
